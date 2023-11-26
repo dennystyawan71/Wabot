@@ -1,0 +1,152 @@
+Buat BOT Whatsapp - Sesuai Keyword
+1. install node js didalam pc
+2. Buat folder baru untuk menaruh kodingan bot
+3. buka visual studio code dan buka new terminal
+
+===================================================================================
+-> Buat projek baru dengan cara ==> ketik npm init (enter) dan konfigurasikan
+===================================================================================
+
+4. Ketik npm install puppeteer -> untuk install depedensi puppeteer
+5. Ketik npm install qrcode-terminal -> untuk install depedensi qrcode-terminal
+6. Ketik npm install whatsapp-web.js -> untuk install depedensi whatsapp-web.js
+7. Setelah depedensi terinstall semua, buatlah file baru dengan nama app.js
+8. lakukan pengkodingan seperti dibawah ini didalam app.js
+
+
+===================================================================================
+-> Kodingan WaBoot ==>> Cara menjalankannya dengan ketik : node app.js
+===================================================================================
+
+const { Client, LocalAuth, MessageMedia } = require('whatsapp-web.js');
+const qrcode = require ('qrcode-terminal');
+const puppeteer = require ('puppeteer')
+const client = new Client({
+    authStrategy: new LocalAuth(),
+    puppeteer: {headless: false},
+});
+
+client.on('qr', (qr) => {
+    // Generate and scan this code with your phone
+    console.log(qr)
+})
+
+client.on('ready', () => {
+    console.log('Client is ready!');
+});
+
+client.on('message', async message => {
+    const incomingMessage = message.body.toLowerCase(); // Mengubah pesan masuk menjadi huruf kecil untuk memudahkan pemrosesan
+
+    // Menyediakan daftar template dan respons yang sesuai
+    if (message.body) {
+
+        const keywords = {
+            // pesan untuk pertanyaan seputar uang kuliah
+            'spp':
+            'Terimakasih tela menghubungi kami, untuk keluhan anda tentang SPP atau Uang kuliah akan segera kami infokan beberapa saat lagi setelah kami mengecek data data anda terlebih dahulu',
+            
+            'uang kuliah': 
+            'Terimakasih tela menghubungi kami, untuk keluhan anda tentang SPP atau Uang kuliah akan segera kami infokan beberapa saat lagi setelah kami mengecek data data anda terlebih dahulu',
+            
+            'pembayaran uang kuliah': 
+            'Terimakasih tela menghubungi kami, untuk keluhan anda tentang SPP atau Uang kuliah akan segera kami infokan beberapa saat lagi setelah kami mengecek data data anda terlebih dahulu',
+            
+            'pembayaran kuliah': 
+            'Terimakasih tela menghubungi kami, untuk keluhan anda tentang SPP atau Uang kuliah akan segera kami infokan beberapa saat lagi setelah kami mengecek data data anda terlebih dahulu',
+    
+            // pesan untuk pertanyaan seputar KRS atau jadwal kuliah
+            'jadwal krs': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'jadwal matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'jam matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'jadwal jam matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'dosen matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah dosen pengampuh matakuliah yang anda ambil sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'dosen matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah dosen pengampuh matakuliah yang anda ambil sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'krs': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah krs yang anda ambil sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'tanda tangan krs': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah penandatanganan KRS atau Jadwal Matakuliah bisa dilakukan langsung ke fakultas dan menemui langsung dosen pembimbing setelah itu baru anda bisa meletakannya ke biro untuk penadatanganan rektor, pastikan anda membuat 2 rangkap pada saat mencetak KRS atau Jadwal Matakuliah karena 1 akan dikumpulkan ke biro 1 lagi untuk anda pegang sebagai jadwal anda berkuliah, terimakasih',
+            
+            'tanda tangan matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah penandatanganan KRS atau Jadwal Matakuliah bisa dilakukan langsung ke fakultas dan menemui langsung dosen pembimbing setelah itu baru anda bisa meletakannya ke biro untuk penadatanganan rektor, pastikan anda membuat 2 rangkap pada saat mencetak KRS atau Jadwal Matakuliah karena 1 akan dikumpulkan ke biro 1 lagi untuk anda pegang sebagai jadwal anda berkuliah, terimakasih',
+    
+            'pengesahan matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah penandatanganan KRS atau Jadwal Matakuliah bisa dilakukan langsung ke fakultas dan menemui langsung dosen pembimbing setelah itu baru anda bisa meletakannya ke biro untuk penadatanganan rektor, pastikan anda membuat 2 rangkap pada saat mencetak KRS atau Jadwal Matakuliah karena 1 akan dikumpulkan ke biro 1 lagi untuk anda pegang sebagai jadwal anda berkuliah, terimakasih',
+    
+            'pengesahan krs': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah penandatanganan KRS atau Jadwal Matakuliah bisa dilakukan langsung ke fakultas dan menemui langsung dosen pembimbing setelah itu baru anda bisa meletakannya ke biro untuk penadatanganan rektor, pastikan anda membuat 2 rangkap pada saat mencetak KRS atau Jadwal Matakuliah karena 1 akan dikumpulkan ke biro 1 lagi untuk anda pegang sebagai jadwal anda berkuliah, terimakasih',
+            
+            'acc krs': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah penandatanganan KRS atau Jadwal Matakuliah bisa dilakukan langsung ke fakultas dan menemui langsung dosen pembimbing setelah itu baru anda bisa meletakannya ke biro untuk penadatanganan rektor, pastikan anda membuat 2 rangkap pada saat mencetak KRS atau Jadwal Matakuliah karena 1 akan dikumpulkan ke biro 1 lagi untuk anda pegang sebagai jadwal anda berkuliah, terimakasih',
+    
+            'acc matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah penandatanganan KRS atau Jadwal Matakuliah bisa dilakukan langsung ke fakultas dan menemui langsung dosen pembimbing setelah itu baru anda bisa meletakannya ke biro untuk penadatanganan rektor, pastikan anda membuat 2 rangkap pada saat mencetak KRS atau Jadwal Matakuliah karena 1 akan dikumpulkan ke biro 1 lagi untuk anda pegang sebagai jadwal anda berkuliah, terimakasih',
+            
+            'cetak krs': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah pencetakan krs anda bisa lakukan langsung didalam portal mahasiswa , jika ada kendala dalam portal mahasiswa coba silahkan anda tunggu beberapa saat lalu kemudian coba kembali untuk mencetak nya karena mungkin terlalu banyak mahasiswa yang mencetak krs disaat yang bersamaan sehingga website portal mahasiswa down.',
+            
+            // Pesan untuk perubahaan jadwal mata kuliah atau krs
+            
+            'perubahaan krs': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah perubahan atau merubah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'ubah krs': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah perubahan atau merubah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'ubah matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah perubahan atau merubah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'ubah jadwal krs': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah perubahan atau merubah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'ubah jadwal matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah perubahan atau merubah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'mengubah jadwal matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah perubahan atau merubah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'mengubah jadwal krs': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah perubahan atau merubah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'mengganti jadwal krs': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah perubahan atau merubah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'mengganti jadwal matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah perubahan atau merubah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'menambah jadwal matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah perubahan atau merubah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'tambah jadwal matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah perubahan atau merubah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+    
+            'tambah matakuliah': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah perubahan atau merubah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'tambah krs': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah perubahan atau merubah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+            
+            'tambah jadwal krs': 'terimakasih sudah menyampaikan keluhan anda kepada kami, \n untuk masalah perubahan atau merubah krs anda sedang dalam proses pengecekan oleh pihak biro dan fakultas, mohon bersabar dan menunggu info dari biro atau fakultas dan atau anda dapat terus memantau nya di portal web mahasiswa, jika masih belum ada perubahan atau belum ada info dari kami dalam waktu 2x24 jam , maka anda bisa langsung datang ke biro akademik untuk menindaklanjuti keluhan anda.',
+    
+            'lokasi': 'Halo! Berikut adalah lokasi toko kami: ...',
+            // pesan penutup untuk user saat user mengirim pesan yang berisi keyword dibawah ini
+            'terimakasih': 'Baik sama - sama, silahkan menghubungi kami kapanpun untuk mengetahui informasi lainnya \n sampai jumpa!',
+    
+            // pesan otomatis saat user pertama kali mengirimkan pesan ke bot apapun itu pesan textnya
+            'default': 'Terimkasih telah menghubungi kami,\nSilahkan Tuliskan Keluhan atau Pertanyaan anda dengan format  berikut \n Nama : \n Prodi : \n Keluhan : \n \n Pastikan anda mengetikan keluhan anda dengan benar'
+          };
+  
+      // Mencari keyword dalam pesan masuk
+      let matchedKeyword = 'default';
+      Object.keys(keywords).forEach(keyword => {
+        if (incomingMessage.includes(keyword)) {
+          matchedKeyword = keyword;
+        }
+      });
+  
+      // Menentukan respons berdasarkan keyword yang ditemukan
+      const response = keywords[matchedKeyword];
+  
+      // Mengirimkan pesan balasan
+      await message.reply(response);
+
+    }
+ });
+
+client.on('message', msg => {
+    if (msg.body == 'ping') {
+        msg.reply('pong');
+    }
+});
+
+client.on('disconnected', (reason) => {
+    console.log('disconnet whatsapp bot', reason);
+});
+
+client.initialize();
